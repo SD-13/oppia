@@ -696,8 +696,28 @@ class EmailPreferencesTests(test_utils.GenericTestBase):
                 email_preferences.can_receive_subscription_email,
                 feconf.DEFAULT_SUBSCRIPTION_EMAIL_PREFERENCE)
 
+    def test_can_see_email_updates(self) -> None:
+        """Test that Email preferences Handler can correctly see the email
+        preferences of the user.
+        """
+
+        self.signup(self.EDITOR_EMAIL, self.EDITOR_USERNAME)
+        self.login(self.EDITOR_EMAIL)
+
+        default_email_preferences = {
+            'user_email': self.EDITOR_EMAIL,
+            'username': self.EDITOR_USERNAME,
+            'is_super_admin': False,
+            'can_receive_email_updates': False,
+            'can_receive_editor_role_email': True,
+            'can_receive_feedback_message_email': True,
+            'can_receive_subscription_email': True
+        }
+        response = self.get_json(feconf.EMAIL_PREFFERENCES)
+        self.assertEqual(default_email_preferences, response)
+
     def test_email_preferences_updates(self) -> None:
-        """Test that Preferences Handler correctly updates the email
+        """Test that Email preferences Handler correctly updates the email
         preferences of the user.
         """
 
