@@ -2,7 +2,7 @@ name: Broadcast 'push to develop' event to our release-scripts repo
 on:
   push:
     branches:
-      - develop
+      - test_split_handler
 
 jobs:
   send_notifications:
