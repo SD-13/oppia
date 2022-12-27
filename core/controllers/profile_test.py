@@ -449,9 +449,9 @@ class PreferencesHandlerTests(test_utils.GenericTestBase):
             {
                 'data': 'new_profile_picture_data_url'},
             csrf_token=csrf_token)
-        user_settings = user_services.get_user_settings(self.owner_id)
+        response = self.get_json(feconf.PREFERENCES_PROFILE_PICTURE_DATA_URL)
         self.assertEqual(
-            user_settings.profile_picture_data_url,
+            response,
             'new_profile_picture_data_url')
         self.logout()
 
