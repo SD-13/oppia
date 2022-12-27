@@ -1,13 +1,5 @@
 name: Backend tests
-on:
-  push:
-    branches:
-      - develop
-      - release-*
-  pull_request:
-    branches:
-      - develop
-      - release-*
+on: [push]
 
 jobs:
   run_tests:
