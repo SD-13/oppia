@@ -1,0 +1,12 @@
+FROM node:16.13.0-alpine
+
+WORKDIR /home/app/oppia
+RUN ls
+ADD ./yarn.lock ./yarn.lock
+ADD ./package.json ./package.json
+ADD ./scripts/linters/custom_eslint_checks ./scripts/linters/custom_eslint_checks
+ADD ./webpack.dev.config.ts ./webpack.dev.config.ts
+
+ENV PATH /home/app/oppia/node_modules/.bin;$PATH
+
+RUN yarn install --pure-lockfile

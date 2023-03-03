@@ -1,0 +1,131 @@
+version: '3.6'
+services:
+  redis:
+    container_name: oppia-redis
+    hostname: oppia-redis
+    image: redis:7.0-alpine
+    volumes:
+      - ./docker/redis.conf:/usr/local/redis.conf
+      - ./dump.rdb:/var/lib/redis
+    command: /usr/local/redis.conf
+    ports:
+      - 6379:6379
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 3s
+      timeout: 30s
+      retries: 5
+      start_period: 5s
+    networks:
+      - backend-network
+
+  elasticsearch:
+    container_name: oppia-elasticsearch
+    image: elasticsearch:7.17.0
+    environment:
+      - ES_JAVA_OPTS=-Xms500m -Xmx500m
+      - ES_PATH_CONF=/usr/share/elasticsearch/config
+      - xpack.security.enabled=false
+      - "discovery.type=single-node"
+    ports:
+      - 9200:9200
+    healthcheck:
+      test: [ "CMD", "printf", "''", "2>>/dev/null", ">>/dev/tcp/localhost/9202"]
+      interval: 3s
+      timeout: 30s
+      retries: 5
+      start_period: 5s
+    networks:
+      - backend-network
+
+  cloud-datastore:
+    container_name: oppia-cloud-datastore
+    image: singularities/datastore-emulator
+    environment:
+      - DATASTORE_PROJECT_ID=dev-project-id
+      - DATASTORE_LISTEN_ADDRESS=0.0.0.0:8089
+    command: --no-store-on-disk --consistency=1.0
+    ports:
+      - 8089:8089
+    healthcheck:
+      test: [ "CMD", "netstat -ltn | grep -c 8089"]
+      interval: 3s
+      timeout: 30s
+      retries: 5
+      start_period: 5s
+    networks:
+      - backend-network
+
+  firebase:
+    container_name: oppia-firebase
+    build:
+      context: ./docker
+      dockerfile: ./Dockerfiles/firebase_dockerfile
+      target: firebase
+    command: firebase emulators:start --project=dev-project-id --only auth --config /config/.firebase.json
+    volumes:
+      - ./docker:/config
+      - /home/app/node_modules
+    ports:
+      - 4000:4000
+      - 9099:9099
+    healthcheck:
+      test: [ "CMD", "netstat -ltn | grep -c 9099"]
+      interval: 3s
+      timeout: 30s
+      retries: 5
+      start_period: 5s
+    networks:
+      - backend-network
+
+  devserver:
+    container_name: oppia-devserver
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfiles/Dockerfile
+    command:
+     - --host=0.0.0.0
+     - --port=8181
+     - --admin_host=0.0.0.0
+     - --admin_port=8000
+     - --enable_host_checking=true
+     - --automatic_restart=true
+     - --skip_sdk_update_check=true
+     - --log_level=info
+     - --dev_appserver_log_level=info
+     - app_dev.yaml
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/home/app/oppia
+      - /home/app/oppia_tools
+      - /home/app/.pyenv
+    depends_on:
+      - redis
+        # condition: service_healthy
+      - elasticsearch
+        # condition: service_healthy
+      - cloud-datastore
+        # condition: service_healthy
+      - firebase
+        # condition: service_healthy
+    # TODO: Require setting servers (Redis, elasticsearch etc.) host via env and remove host network.
+    network_mode: host
+
+  frontend:
+    container_name: oppia-frontend
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfiles/frontend_dockerfile
+    command: node_modules/.bin/webpack --config webpack.dev.config.ts --color --watch --progress
+    volumes:
+      - .:/home/app/oppia
+      - /home/app/oppia/node_modules
+    networks:
+      - frontend-network
+
+networks:
+  backend-network:
+    driver: bridge
+  frontend-network:
+

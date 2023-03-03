@@ -1,0 +1,6 @@
+FROM node:16.13.0-alpine as firebase
+EXPOSE  4400 4500 5000 5001 8001 8080 8085 9099
+
+WORKDIR /home/app
+
+RUN npm install -g https://github.com/oppia/firebase-tools/releases/download/v9.6.0-PATCH/firebase-tools-9.6.0-PATCH.tgz firebase-admin@^10.0.0 firebase@^8.10.0
