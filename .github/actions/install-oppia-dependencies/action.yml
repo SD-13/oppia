@@ -5,12 +5,12 @@ runs:
   steps:
     - name: Setup python by installing wheel
       run: pip install wheel==0.35.0
-      # shell: bash
+      shell: bash
     - name: Install python 2 for GAE
       run: |
         sudo apt update
         sudo apt install python2 -y
-      # shell: bash
+      shell: bash
     - name: Check Yarn Cache
       run: |
         # Move outside repository root to ignore the configs in
@@ -26,12 +26,12 @@ runs:
         rm .yarnrc
         # Move back to the repository root.
         cd -
-      # shell: bash
+      shell: bash
     - name: Install third party
       run: python -m scripts.install_third_party_libs
-      # shell: bash
+      shell: bash
     - name: Check Yarn Cache
       # Check the yarn cache again to see what packages were just
       # installed.
       run: yarn cache list
-      # shell: bash
+      shell: bash
