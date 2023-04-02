@@ -25,21 +25,25 @@ jobs:
           python-version: '3.8.15'
           architecture: 'x64'
       - uses: ./.github/actions/merge
-      # Caching is disabled to avoid poisoning our cache with the
-      # changed lighthouse file.
-      #
-      # - name: Cache node modules
-      #   uses: actions/cache@v3
-      #   env:
-      #     cache-name: cache-node-modules
-      #   with:
-      #     path: /home/runner/work/oppia/yarn_cache
-      #     key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('yarn.lock') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-build-${{ env.cache-name }}-
-      #       ${{ runner.os }}-build-
-      #       ${{ runner.os }}-
-      - uses: ./.github/actions/install-oppia-dependencies
+      - name: Cache third party dependencies
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-third-party-dependencies
+        with:
+          path: |
+            /home/runner/work/oppia/oppia/third_party
+            /home/runner/work/oppia/oppia/node_modules
+            /home/runner/work/oppia/yarn_cache
+            /home/runner/work/oppia/oppia_tools/buf-0.29.0
+            /home/runner/work/oppia/oppia_tools/elasticsearch-7.17.0
+            /home/runner/work/oppia/oppia_tools/node-16.13.0
+            /home/runner/work/oppia/oppia_tools/redis-cli-6.2.4
+            /home/runner/work/oppia/oppia_tools/yarn-1.22.15
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('yarn.lock', 'dependencies.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
       - run: |
           # Replace the 1.5 second timeout in lighthouse for retrieving
           # sourcemaps with a 10 second timeout. This timeout is not

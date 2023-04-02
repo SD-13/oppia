@@ -25,20 +25,25 @@ jobs:
           python-version: '3.8.15'
           architecture: 'x64'
       - uses: ./.github/actions/merge
-      - name: Cache node modules and third_party/static
+      - name: Cache third party dependencies
         uses: actions/cache@v3
         env:
-          cache-name: cache-node-modules
+          cache-name: cache-third-party-dependencies
         with:
           path: |
+            /home/runner/work/oppia/oppia/third_party
+            /home/runner/work/oppia/oppia/node_modules
             /home/runner/work/oppia/yarn_cache
-            /home/runner/work/oppia/oppia/third_party/static
+            /home/runner/work/oppia/oppia_tools/buf-0.29.0
+            /home/runner/work/oppia/oppia_tools/elasticsearch-7.17.0
+            /home/runner/work/oppia/oppia_tools/node-16.13.0
+            /home/runner/work/oppia/oppia_tools/redis-cli-6.2.4
+            /home/runner/work/oppia/oppia_tools/yarn-1.22.15
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('yarn.lock', 'dependencies.json') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-      - uses: ./.github/actions/install-oppia-dependencies
       - name: Run ESLint Tests
         if: startsWith(github.head_ref, 'update-changelog-for-release') == false
         run: PYTHONIOENCODING=utf-8 python -m scripts.run_custom_eslint_tests

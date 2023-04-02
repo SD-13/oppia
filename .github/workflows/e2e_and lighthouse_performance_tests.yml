@@ -30,20 +30,25 @@ jobs:
             requirements_dev.in
             requirements_dev.txt
       - uses: ./.github/actions/merge
-      - name: Cache node modules and third_party/static
+      - name: Cache third party dependencies
         uses: actions/cache@v3
         env:
-          cache-name: cache-node-modules
+          cache-name: cache-third-party-dependencies
         with:
           path: |
+            /home/runner/work/oppia/oppia/third_party
+            /home/runner/work/oppia/oppia/node_modules
             /home/runner/work/oppia/yarn_cache
-            /home/runner/work/oppia/oppia/third_party/static
+            /home/runner/work/oppia/oppia_tools/buf-0.29.0
+            /home/runner/work/oppia/oppia_tools/elasticsearch-7.17.0
+            /home/runner/work/oppia/oppia_tools/node-16.13.0
+            /home/runner/work/oppia/oppia_tools/redis-cli-6.2.4
+            /home/runner/work/oppia/oppia_tools/yarn-1.22.15
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('yarn.lock', 'dependencies.json') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-      - uses: ./.github/actions/install-oppia-dependencies
       - name: Install chrome
         run: python -m scripts.install_chrome_for_ci
       - name: Install ffmpeg
@@ -156,7 +161,25 @@ jobs:
           ls -la oppia/third_party
         working-directory: /home/runner/work/oppia
         shell: bash
-      - uses: ./.github/actions/install-oppia-dependencies
+      - name: Cache third party dependencies
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-third-party-dependencies
+        with:
+          path: |
+            /home/runner/work/oppia/oppia/third_party
+            /home/runner/work/oppia/oppia/node_modules
+            /home/runner/work/oppia/yarn_cache
+            /home/runner/work/oppia/oppia_tools/buf-0.29.0
+            /home/runner/work/oppia/oppia_tools/elasticsearch-7.17.0
+            /home/runner/work/oppia/oppia_tools/node-16.13.0
+            /home/runner/work/oppia/oppia_tools/redis-cli-6.2.4
+            /home/runner/work/oppia/oppia_tools/yarn-1.22.15
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('yarn.lock', 'dependencies.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
       - name: Install chrome
         run: python -m scripts.install_chrome_for_ci
       - name: Install ffmpeg
@@ -236,7 +259,25 @@ jobs:
           ls -la oppia/third_party
         working-directory: /home/runner/work/oppia
         shell: bash
-      - uses: ./.github/actions/install-oppia-dependencies
+      - name: Cache third party dependencies
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-third-party-dependencies
+        with:
+          path: |
+            /home/runner/work/oppia/oppia/third_party
+            /home/runner/work/oppia/oppia/node_modules
+            /home/runner/work/oppia/yarn_cache
+            /home/runner/work/oppia/oppia_tools/buf-0.29.0
+            /home/runner/work/oppia/oppia_tools/elasticsearch-7.17.0
+            /home/runner/work/oppia/oppia_tools/node-16.13.0
+            /home/runner/work/oppia/oppia_tools/redis-cli-6.2.4
+            /home/runner/work/oppia/oppia_tools/yarn-1.22.15
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('yarn.lock', 'dependencies.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
       - name: Install chrome
         if: startsWith(github.head_ref, 'update-changelog-for-release') == false
         run: python -m scripts.install_chrome_for_ci
