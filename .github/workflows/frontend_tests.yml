@@ -54,20 +54,25 @@ jobs:
           python-version: '3.8.15'
           architecture: 'x64'
       - uses: ./.github/actions/merge
-      - name: Cache node modules and third_party/static
+      - name: Cache third party dependencies
         uses: actions/cache@v3
         env:
-          cache-name: cache-node-modules
+          cache-name: cache-third-party-dependencies
         with:
           path: |
+            /home/runner/work/oppia/oppia/third_party
+            /home/runner/work/oppia/oppia/node_modules
             /home/runner/work/oppia/yarn_cache
-            /home/runner/work/oppia/oppia/third_party/static
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('yarn.lock', 'dependencies.json') }}
+            /home/runner/work/oppia/oppia_tools/buf-*
+            /home/runner/work/oppia/oppia_tools/elasticsearch-*
+            /home/runner/work/oppia/oppia_tools/node-*
+            /home/runner/work/oppia/oppia_tools/redis-cli-*
+            /home/runner/work/oppia/oppia_tools/yarn-*
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('yarn.lock', 'dependencies.json', 'requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-      - uses: ./.github/actions/install-oppia-dependencies
       - name: Suppress ENOSPC error from chokidar file watcher. See https://stackoverflow.com/a/32600959.
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - name: Run frontend tests ${{ matrix.num_runs }}
