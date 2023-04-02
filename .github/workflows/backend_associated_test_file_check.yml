@@ -13,7 +13,6 @@ on:
 
 jobs:
   run_tests:
-    needs: install_third_party_dependencies
     name: Run backend associated test file checks
     runs-on:  ${{ matrix.os }}
     strategy:
@@ -27,6 +26,7 @@ jobs:
           architecture: 'x64'
       - uses: ./.github/actions/merge
       - name: Cache third party dependencies
+        needs: install_third_party_dependencies
         uses: actions/cache@v3
         env:
           cache-name: cache-third-party-dependencies
