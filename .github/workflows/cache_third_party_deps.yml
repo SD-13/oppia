@@ -65,12 +65,11 @@ jobs:
             /home/runner/work/oppia/oppia/third_party
             /home/runner/work/oppia/oppia/node_modules
             /home/runner/work/oppia/yarn_cache
-            /home/runner/work/oppia/oppia_tools/buf-*
-            /home/runner/work/oppia/oppia_tools/elasticsearch-*
-            /home/runner/work/oppia/oppia_tools/node-*
-            /home/runner/work/oppia/oppia_tools/redis-cli-*
-            /home/runner/work/oppia/oppia_tools/yarn-*
-            /home/runner/work/oppia/oppia/.git/hooks/
+            /home/runner/work/oppia/oppia_tools/buf-0.29.0
+            /home/runner/work/oppia/oppia_tools/elasticsearch-7.17.0
+            /home/runner/work/oppia/oppia_tools/node-16.13.0
+            /home/runner/work/oppia/oppia_tools/redis-cli-6.2.4
+            /home/runner/work/oppia/oppia_tools/yarn-1.22.15
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('yarn.lock', 'dependencies.json') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
