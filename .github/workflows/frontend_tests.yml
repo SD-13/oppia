@@ -68,7 +68,7 @@ jobs:
             /home/runner/work/oppia/oppia_tools/node-*
             /home/runner/work/oppia/oppia_tools/redis-cli-*
             /home/runner/work/oppia/oppia_tools/yarn-*
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('yarn.lock', 'dependencies.json', 'requirements.txt') }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('yarn.lock', 'dependencies.json') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
