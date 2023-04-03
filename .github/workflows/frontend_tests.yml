@@ -90,9 +90,6 @@ jobs:
         run: |
           import sys
           sys.path.insert(0, '/home/runner/work/oppia/oppia/third_party/python_libs')
-      - name: check if python libs are added to PATH
-        run: |
-          echo sys.path
       - name: Suppress ENOSPC error from chokidar file watcher. See https://stackoverflow.com/a/32600959.
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - name: Run frontend tests ${{ matrix.num_runs }}
