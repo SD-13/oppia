@@ -257,6 +257,15 @@ class MailingListSubscriptionHandler(
         self.render_json({'status': status})
 
 
+class EmailPreferencesDict(TypedDict):
+    """Dictionary that represents Email preferences."""
+
+    can_receive_email_updates: bool
+    can_receive_editor_role_email: bool
+    can_receive_feedback_message_email: bool
+    can_receive_subscription_email: bool
+
+
 class PreferencesHandler(base.BaseHandler[Dict[str, str], Dict[str, str]]):
     """Provides data for the preferences page."""
 
