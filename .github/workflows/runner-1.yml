@@ -30,6 +30,10 @@ jobs:
         run: pip install wheel==0.35.0
         shell: bash
       - uses: ./.github/actions/merge
+      - name: Install python2
+        run: |
+          sudo apt-get update
+          sudo apt-get install python2
       - name: Cache third party dependencies
         uses: actions/cache@v3
         env:
