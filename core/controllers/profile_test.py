@@ -69,7 +69,7 @@ class ProfilePageTests(test_utils.GenericTestBase):
             self.put_json(
                 '/preferenceshandler/data',
                 {
-                    'update_type': 'user_bio',
+                    'update_type': 'user_bio_1',
                     'data': 'Bio data of the editor'
                 },
                 csrf_token=csrf_token
