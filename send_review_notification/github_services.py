@@ -46,7 +46,10 @@ def init_service(token: Optional[str]=None) -> None:
 
 # Here we use type Any because.
 def check_token(func: Callable[..., Any]) -> Callable[..., Any]:
-    """A decorator to check whether the service is initialized with the token."""
+    """A decorator to check whether the service is initialized with
+    the token.
+    """
+
     # Here we use type Any because.
     def execute_if_token_initialized(*args: Any, **kwargs: Any) -> Any:
         """Executes the given function if the token is initialized."""
