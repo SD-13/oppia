@@ -1012,14 +1012,14 @@ class ManagedProcessTests(test_utils.TestBase):
         self.assertIn('--params.devMode=True', program_args)
 
     def test_managed_webdriverio_mobile(self) -> None:
-        with servers.managed_webdriverio_server(mobile=True):
+        with servers.managed_webdriverio_server(mobile=True, chrome_version='104.0.5112.79'):
             self.assertEqual(os.getenv('MOBILE'), 'true')
 
     def test_managed_webdriverio_with_explicit_args(self) -> None:
         popen_calls = self.exit_stack.enter_context(self.swap_popen())
 
         self.exit_stack.enter_context(servers.managed_webdriverio_server(
-            suite_name='abc', sharding_instances=3, debug_mode=True,
+            suite_name='abc', sharding_instances=3, chrome_version='104.0.5112.79', debug_mode=True,
             dev_mode=False, stdout=subprocess.PIPE))
         self.exit_stack.close()
 
