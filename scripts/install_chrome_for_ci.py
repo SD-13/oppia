@@ -54,9 +54,7 @@ def install_chrome(version: str) -> None:
 
     print()
     print()
-    common.run_cmd(['ls', '-al', 'chrome'])
     print(version)
-
     common.run_cmd(['sudo', 'dpkg', '-i', CHROME_DEB_FILE])
 
 
