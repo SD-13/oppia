@@ -33,7 +33,7 @@ URL_TEMPLATE = (
 )
 CHROME_DEB_FILE = 'google-chrome.deb'
 
-# Digging into the chrome installation error.
+
 def install_chrome(version: str) -> None:
     """Install Chrome from the URL in URL_TEMPLATE.
 
@@ -51,6 +51,12 @@ def install_chrome(version: str) -> None:
         'sudo', 'sed', '-i',
         's|HERE/chrome\\"|HERE/chrome\\" --disable-setuid-sandbox|g',
         '/opt/google/chrome/google-chrome'])
+
+    print()
+    print()
+    common.run_cmd(['ls', '-al', 'chrome'])
+    print(version)
+
     common.run_cmd(['sudo', 'dpkg', '-i', CHROME_DEB_FILE])
 
 
