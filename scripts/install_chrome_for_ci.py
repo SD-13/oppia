@@ -33,7 +33,7 @@ URL_TEMPLATE = (
 )
 CHROME_DEB_FILE = 'google-chrome.deb'
 
-
+# Digging into the chrome installation error.
 def install_chrome(version: str) -> None:
     """Install Chrome from the URL in URL_TEMPLATE.
 
