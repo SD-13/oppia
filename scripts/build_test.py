@@ -28,6 +28,7 @@ import re
 import sys
 import tempfile
 import threading
+from unittest import mock
 
 from core.tests import test_utils
 
@@ -333,40 +334,37 @@ class BuildTests(test_utils.GenericTestBase):
 
         # Swapping out constants to check if the reverse is true.
         # ALL JS files that ends with ...Service.js should not be built.
-        with self.swap(
-            build, 'JS_FILENAME_SUFFIXES_TO_IGNORE', ('Service.js',)
+        with mock.patch(
+            'scripts.build.JS_FILENAME_SUFFIXES_TO_IGNORE', ('Service.js',)
         ):
             self.assertTrue(build.should_file_be_built(spec_js_filepath))
 
+    @mock.patch(
+        'scripts.build.FILEPATHS_NOT_TO_RENAME',
+        ('*.py', 'path/to/fonts/*', 'path/to/third_party.min.css.map'),
+    )
     def test_hash_should_be_inserted(self) -> None:
         """Test hash_should_be_inserted returns the correct boolean value
         for filepath that should be hashed.
         """
-        with self.swap(
-            build,
-            'FILEPATHS_NOT_TO_RENAME',
-            ('*.py', 'path/to/fonts/*', 'path/to/third_party.min.css.map'),
-        ):
-            self.assertFalse(
-                build.hash_should_be_inserted(
-                    'path/to/fonts/fontawesome-webfont.svg'
-                )
+        self.assertFalse(
+            build.hash_should_be_inserted(
+                'path/to/fonts/fontawesome-webfont.svg'
             )
-            self.assertFalse(
-                build.hash_should_be_inserted('path/to/third_party.min.css.map')
+        )
+        self.assertFalse(
+            build.hash_should_be_inserted('path/to/third_party.min.css.map')
+        )
+        self.assertTrue(
+            build.hash_should_be_inserted('path/to/wrongFonts/fonta.eot')
+        )
+        self.assertTrue(
+            build.hash_should_be_inserted(
+                'rich_text_components/Video/protractor.js'
             )
-            self.assertTrue(
-                build.hash_should_be_inserted('path/to/wrongFonts/fonta.eot')
-            )
-            self.assertTrue(
-                build.hash_should_be_inserted(
-                    'rich_text_components/Video/protractor.js'
-                )
-            )
-            self.assertFalse(build.hash_should_be_inserted('main.py'))
-            self.assertFalse(
-                build.hash_should_be_inserted('extensions/domain.py')
-            )
+        )
+        self.assertFalse(build.hash_should_be_inserted('main.py'))
+        self.assertFalse(build.hash_should_be_inserted('extensions/domain.py'))
 
     def test_generate_copy_tasks_to_copy_from_source_to_target(self) -> None:
         """Test generate_copy_tasks_to_copy_from_source_to_target queues up
